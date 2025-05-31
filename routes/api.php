@@ -18,4 +18,12 @@ Route::post('register', 'Auth\ApiAuthController@register');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'Auth\ApiAuthController@details');
+
+    Route::get('clinicas', 'Api\ClinicaController@index');
+    Route::get('clinicas/{id}', 'Api\ClinicaController@show');
+    Route::post('clinicas', 'Api\ClinicaController@store');
+    Route::put('clinicas/{id}', 'Api\ClinicaController@update');
+
+    Route::get('regionais', 'Api\RegionalController@index');
+    Route::post('regionais', 'Api\RegionalController@store');
 });
