@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+    mysql:
+        image: mysql:5.7
+        container_name: mysql
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: clinica-amor
+            MYSQL_USER: laravel-clinica
+            MYSQL_PASSWORD: q1w2e3r4t5
+        volumes:
+            - mysql_data:/var/lib/mysql
+
+volumes:
+    mysql_data:
