@@ -1,51 +1,150 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Clínica Amor Saúde – Backend (Laravel 5.4)
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Este projeto é a API backend da aplicação **Clínica Amor**, construída com Laravel 5.4 e PHP 7.0. A API é responsável por gerenciar entidades como clínicas, especialidades médicas e regionais.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+## ✅ Requisitos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   PHP 7.0
+-   Composer
+-   Docker e Docker Compose
+-   MySQL
+-   Extensões do PHP: `mbstring`, `pdo`, `openssl`, `tokenizer`, `xml`, `curl`
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+---
 
-## Learning Laravel
+## 🚀 Instalação
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+### 1. Clonar o repositório
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+```bash
+git clone https://seu-repo.git backend-clinica
+cd backend-clinica
+```
 
-## Laravel Sponsors
+### 2. Instalar dependências via Composer
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+```bash
+composer install
+```
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
+### 3. Copiar e configurar o `.env`
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Configure as seguintes variáveis no `.env` conforme necessário:
 
-## Security Vulnerabilities
+```env
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_LOG_LEVEL=debug
+APP_URL=http://localhost
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=clinica-amor
+DB_USERNAME=laravel-clinica
+DB_PASSWORD=q1w2e3r4t5
 
-## License
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_DRIVER=sync
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+
+```
+
+### 4. Gerar a chave da aplicação
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## 🐳 Rodar Banco de Dados com Docker
+
+Você pode subir a instância do banco de dados com Docker Compose usando o seguinte comando:
+
+```bash
+docker-compose up -d
+```
+
+O arquivo `docker-compose.yml` (incluso no projeto) vai subir um container com:
+
+-   MariaDB na porta `3306`
+-   Usuário: `laravel-clinica`
+-   Senha: `q1w2e3r4t5`
+
+## 🛠 Executar Migrações
+
+```bash
+php artisan migrate
+```
+
+---
+
+## 📦 Populando o Banco de Dado
+
+Para popular o banco de dados com dados iniciais, você pode usar os seeders. Primeiro certifique-se de que o banco de dados está vazio ou que você deseja sobrescrever os dados existentes.
+Em seguida, execute o comando:
+
+```bash
+composer dump-autoload
+```
+
+E então rode o seeder:
+
+```bash
+php artisan db:seed
+```
+
+## 🔥 Rodar o servidor local
+
+```bash
+php artisan serve
+```
+
+A API estará acessível via: [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 🧪 Endpoints principais
+
+-   `GET /api/clinicas`
+-   `POST /api/clinicas`
+-   `PUT /api/clinicas/{id}`
+-   `DELETE /api/clinicas/{id}`
+-   `GET /api/especialidades`
+-   `GET /api/regionais`
+-   `POST /api/login`
+
+---
+
+## 📦 Organização de Código
+
+-   `routes/api.php`: definição das rotas da API
+-   `app/Http/Controllers`: controladores das entidades
+-   `app/Models`: modelos Eloquent
+
+---

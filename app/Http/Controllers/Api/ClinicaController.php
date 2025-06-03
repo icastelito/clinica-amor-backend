@@ -10,14 +10,37 @@ use Illuminate\Support\Facades\Validator;
 
 class ClinicaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $clinicas = Clinica::with(['regional', 'especialidades'])->paginate(10);
+        $query = Clinica::with(['regional', 'especialidades']);
+        $filters = $request->only(['razao_social', 'nome_fantasia', 'cnpj', 'regional_id', 'ativa']);
+        $sort = $request->get('sort', 'razao_social');
+        $order = $request->get('order', 'asc');
+        $perPage = $request->get('per_page', 10);
+        $page = $request->get('page', 2);
+        $search = $request->get('search', '');
 
-        return response()->json($clinicas, 200);
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('razao_social', 'like', "%{$search}%")
+                    ->orWhere('nome_fantasia', 'like', "%{$search}%")
+                    ->orWhere('cnpj', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filters) {
+            foreach ($filters as $key => $value) {
+                if ($value !== null && $value !== '') {
+                    $query->where($key, $value);
+                }
+            }
+        }
+        $query->orderBy($sort, $order);
+        $clinicas = $query->paginate($perPage, ['*'], 'page', $page);
+        return response()->json($clinicas);
     }
 
-    public function store(StoreClinicaRequest $request)
+    public function store(Request $request)
     {
         $clinica = Clinica::create($request->only([
             'razao_social',
@@ -25,8 +48,9 @@ class ClinicaController extends Controller
             'cnpj',
             'regional_id',
             'data_inauguracao',
-            'ativa'
+            'ativa',
         ]));
+
 
         $clinica->especialidades()->sync($request->especialidades);
 
@@ -35,6 +59,8 @@ class ClinicaController extends Controller
             'clinica' => $clinica->load('regional', 'especialidades')
         ], 201);
     }
+
+
 
     public function show($id)
     {
@@ -63,7 +89,7 @@ class ClinicaController extends Controller
             'data_inauguracao' => 'required|date',
             'ativa' => 'boolean',
             'especialidades' => 'required|array|min:5',
-            'especialidades.*' => 'uuid|exists:especialidades,id',
+            'especialidades.*' => 'string|size:36|exists:especialidades,id',
         ]);
 
         if ($validator->fails()) {
@@ -100,8 +126,4 @@ class ClinicaController extends Controller
 
         return response()->json(['message' => 'Clínica removida com sucesso.'], 204);
     }
-
-    // Os métodos create() e edit() não são usados em APIs REST
-    public function create() {}
-    public function edit($id) {}
 }

@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class Clinica extends Model
 {
+
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'razao_social',
         'nome_fantasia',
@@ -20,6 +24,8 @@ class Clinica extends Model
         'data_inauguracao' => 'date',
     ];
 
+    protected $table = 'clinicas';
+
     public function regional()
     {
         return $this->belongsTo(Regional::class);
@@ -28,5 +34,16 @@ class Clinica extends Model
     public function especialidades()
     {
         return $this->belongsToMany(Especialidade::class, 'clinica_especialidade');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = Uuid::uuid4()->toString();
+            }
+        });
     }
 }

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 Route::post('login', 'Auth\ApiAuthController@login');
 Route::post('register', 'Auth\ApiAuthController@register');
+Route::post('refresh-token', 'Auth\ApiAuthController@refreshToken');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'Auth\ApiAuthController@details');
@@ -23,7 +24,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('clinicas/{id}', 'Api\ClinicaController@show');
     Route::post('clinicas', 'Api\ClinicaController@store');
     Route::put('clinicas/{id}', 'Api\ClinicaController@update');
+    Route::delete('clinicas/{id}', 'Api\ClinicaController@destroy');
 
     Route::get('regionais', 'Api\RegionalController@index');
-    Route::post('regionais', 'Api\RegionalController@store');
+
+    Route::get('especialidades', 'Api\EspecialidadeController@index');
 });

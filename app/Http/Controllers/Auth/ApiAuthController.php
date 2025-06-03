@@ -30,23 +30,41 @@ class ApiAuthController extends Controller
 
         return response()->json(['token' => $token], 201);
     }
-
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('LaravelToken')->accessToken;
+            $accessToken = $user->createToken('LaravelToken')->accessToken;
 
-            return response()->json(['token' => $token], 200);
+            $refreshToken = base64_encode(str_random(40));
+
+            return response()->json([
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+                'user' => [
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'name' => $user->name,
+                ]
+            ], 200);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
 
-    public function details()
+    public function refreshToken(Request $request)
     {
-        return response()->json(['user' => Auth::user()], 200);
+        $refreshToken = $request->input('refresh_token');
+
+        if (!$refreshToken) {
+            return response()->json(['error' => 'Refresh token is required'], 400);
+        }
+
+        $user = Auth::user();
+        $newAccessToken = $user->createToken('LaravelToken')->accessToken;
+
+        return response()->json(['access_token' => $newAccessToken], 200);
     }
 }
