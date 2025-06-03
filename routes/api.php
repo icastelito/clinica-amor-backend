@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', 'Auth\ApiAuthController@login');
+Route::post('register', 'Auth\ApiAuthController@register');
+Route::post('refresh-token', 'Auth\ApiAuthController@refreshToken');
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('user', 'Auth\ApiAuthController@details');
+
+    Route::get('clinicas', 'Api\ClinicaController@index');
+    Route::get('clinicas/{id}', 'Api\ClinicaController@show');
+    Route::post('clinicas', 'Api\ClinicaController@store');
+    Route::put('clinicas/{id}', 'Api\ClinicaController@update');
+    Route::delete('clinicas/{id}', 'Api\ClinicaController@destroy');
+
+    Route::get('regionais', 'Api\RegionalController@index');
+
+    Route::get('especialidades', 'Api\EspecialidadeController@index');
 });
